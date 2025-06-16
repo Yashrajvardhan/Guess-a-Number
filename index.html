@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Guess a Number</title>
+
+    <style>
+      body {
+        background: linear-gradient(to right, pink, lightblue);
+        margin: 0;
+        padding: 0;
+        font-family: sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+
+      #container {
+        background-color: rgb(250, 195, 204);
+        padding: 30px;
+        border-radius: 20px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        text-align: center;
+        max-width: 400px;
+        width: 100%;
+      }
+
+      h1 {
+        color: rgb(205, 50, 166);
+      }
+
+      input,
+      button {
+        padding: 10px;
+        margin: 10px 5px;
+        border: none;
+        border-radius: 5px;
+      }
+
+      button {
+        cursor: pointer;
+      }
+
+      #submitGuess {
+        background-color: green;
+        color: white;
+      }
+
+      #feedback {
+        margin-top: 10px;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="container">
+      <h1>Guess a Number</h1>
+      <p>Enter a number between 1 and 100</p>
+      <input type="number" id="guessInput" placeholder="Enter your Number" />
+      <button id="submitGuess">Submit</button>
+      <div id="feedback"></div>
+      <p id="attempts">Attempts: 0</p>
+      <button id="resetBtn">Reset</button>
+    </div>
+
+    <script>
+      let secretNumber = Math.floor(Math.random() * 100) + 1;
+      console.log(`Secret Number: ${secretNumber}`);
+
+      const input = document.getElementById("guessInput");
+      const button = document.getElementById("submitGuess");
+      const feedback = document.getElementById("feedback");
+      const attempts = document.getElementById("attempts");
+      const resetBtn = document.getElementById("resetBtn");
+      let attemptsCount = 0;
+      const maxAttempts = 10;
+
+      button.addEventListener("click", capture);
+      resetBtn.addEventListener("click", resets);
+
+      function capture() {
+        if (attemptsCount >= maxAttempts) {
+          feedback.textContent = "You've reached the maximum number of attempts!";
+          feedback.style.color = "orange";
+          return;
+        }
+
+        const userGuess = parseInt(input.value);
+
+        if (isNaN(userGuess)) {
+          feedback.textContent = "⚠️ Please enter a number!";
+          feedback.style.color = "red";
+        } else if (userGuess < 1 || userGuess > 100) {
+          feedback.textContent = "⚠️ Only numbers from 1 to 100 are allowed.";
+          feedback.style.color = "red";
+        } else {
+          attemptsCount++;
+          attempts.textContent = `Attempts: ${attemptsCount}`;
+
+          if (userGuess === secretNumber) {
+            feedback.textContent = `🎉 Correct! The number was ${secretNumber}`;
+            feedback.style.color = "green";
+          } else if (userGuess < secretNumber) {
+            feedback.textContent = "Too low! Try again.";
+            feedback.style.color = "red";
+          } else {
+            feedback.textContent = "Too high! Try again.";
+            feedback.style.color = "red";
+          }
+
+          if (attemptsCount === maxAttempts && userGuess !== secretNumber) {
+            feedback.textContent += " Game over!";
+          }
+        }
+      }
+
+      function resets() {
+        secretNumber = Math.floor(Math.random() * 100) + 1;
+        console.log(`New Secret Number: ${secretNumber}`);
+        input.value = "";
+        feedback.textContent = "";
+        attemptsCount = 0;
+        attempts.textContent = "Attempts: 0";
+      }
+    </script>
+  </body>
+</html>
